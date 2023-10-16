@@ -23,7 +23,6 @@ if (ROS_VITIS)
   # offloaded_doublevadd_publisher
   add_executable(offloaded_doublevadd_publisher
     src/offloaded_doublevadd_publisher.cpp
-    src/vadd.cpp
   )
   target_include_directories(offloaded_doublevadd_publisher PUBLIC include)
   target_link_libraries(offloaded_doublevadd_publisher
@@ -59,7 +58,7 @@ if (ROS_VITIS)
     vitis_acceleration_kernel(
       NAME vadd_offloaded
       FILE src/vadd.cpp
-      CONFIG src/kv260.cfg
+      CONFIG src/kr260.cfg
       INCLUDE
         include
       TYPE
@@ -67,7 +66,6 @@ if (ROS_VITIS)
         # hw_emu
         hw
       LINK
-      PACKAGE
     )
   endif()
 

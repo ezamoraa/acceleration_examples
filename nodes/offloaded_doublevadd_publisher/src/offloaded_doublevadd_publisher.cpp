@@ -85,23 +85,21 @@ int main(int argc, char * argv[]) {
   // Step 2: Create buffers, map memory
   // ------------------------------------------------------------------------
   // Create the buffers and allocate memory
-  cl::Buffer in1_buf(context, CL_MEM_ALLOC_HOST_PTR | CL_MEM_READ_ONLY,
-    sizeof(int) * DATA_SIZE, NULL, &err);
-  cl::Buffer in2_buf(context, CL_MEM_ALLOC_HOST_PTR | CL_MEM_READ_ONLY,
-    sizeof(int) * DATA_SIZE, NULL, &err);
-  cl::Buffer out_buf(context, CL_MEM_ALLOC_HOST_PTR | CL_MEM_WRITE_ONLY,
-    sizeof(int) * DATA_SIZE, NULL, &err);
+  cl::Buffer in1_buf(context, CL_MEM_READ_ONLY, sizeof(int) * DATA_SIZE, NULL, &err);
+  cl::Buffer in2_buf(context, CL_MEM_READ_ONLY, sizeof(int) * DATA_SIZE, NULL, &err);
+  cl::Buffer out_buf(context, CL_MEM_WRITE_ONLY, sizeof(int) * DATA_SIZE, NULL, &err);
 
   // Map buffers to kernel arguments, thereby assigning
   //  them to specific device memory banks
   krnl_vector_add.setArg(0, in1_buf);
   krnl_vector_add.setArg(1, in2_buf);
   krnl_vector_add.setArg(2, out_buf);
+  krnl_vector_add.setArg(3, DATA_SIZE);
 
   // Map host-side buffer memory to user-space pointers
   int *in1 = (int *)q.enqueueMapBuffer(in1_buf, CL_TRUE, CL_MAP_WRITE, 0, sizeof(int) * DATA_SIZE);  // NOLINT
   int *in2 = (int *)q.enqueueMapBuffer(in2_buf, CL_TRUE, CL_MAP_WRITE, 0, sizeof(int) * DATA_SIZE);  // NOLINT
-  int *out = (int *)q.enqueueMapBuffer(out_buf, CL_TRUE, CL_MAP_WRITE | CL_MAP_READ, 0, sizeof(int) * DATA_SIZE);  // NOLINT
+  int *out = (int *)q.enqueueMapBuffer(out_buf, CL_TRUE, CL_MAP_READ, 0, sizeof(int) * DATA_SIZE);  // NOLINT
 
   // ------------------------------------------------------------------------
   // Step 3: Main loop, set kernel arguments, schedule transfer
